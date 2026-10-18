@@ -10,7 +10,12 @@ from sample_products import SAMPLE_PRODUCTS
 
 def db_path():
     # Read at call time so tests / .env can change it.
-    return os.environ.get("DATABASE_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "shopping.db"))
+    if os.environ.get("DATABASE_PATH"):
+        return os.environ["DATABASE_PATH"]
+    # Vercel's disk is read-only except /tmp (data there is temporary).
+    if os.environ.get("VERCEL"):
+        return "/tmp/shopping.db"
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "shopping.db")
 
 
 @contextmanager

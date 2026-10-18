@@ -22,7 +22,7 @@ MAX_BUDGET = 1_000_000          # rupees
 MAX_CELLS = 5_000_000           # (n+1) * (budget+1) safety limit for the DP table
 MAX_VIZ_PRODUCTS = 8
 MAX_VIZ_BUDGET_UNITS = 60
-FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public")
 
 
 class ApiError(Exception):
