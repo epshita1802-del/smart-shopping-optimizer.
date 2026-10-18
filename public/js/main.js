@@ -24,6 +24,7 @@ const routes = [
   [/^#\/about$/, about, "about"],
 ];
 
+const TITLES = { home: "Home", dashboard: "Dashboard", catalog: "Products", optimize: "Optimizer", visualize: "DP Visualizer", history: "History", about: "About" };
 const app = $("#app");
 let cleanup = null;
 let token = 0;
@@ -40,6 +41,7 @@ async function render() {
     const m = hash.match(re);
     if (!m) continue;
     document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("active", a.dataset.route === navKey));
+    document.title = (TITLES[navKey] || "Smart Shopping") + " | Smart Shopping Budget Optimizer";
     app.innerHTML = loadingHtml();
     try {
       const c = await page(app, m.slice(1), isCurrent);

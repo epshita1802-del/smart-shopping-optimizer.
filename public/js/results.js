@@ -1,6 +1,6 @@
 // Shared rendering for optimization results (used by the Dashboard and the Results page).
 import { esc, inr } from "./utils.js";
-import { bar, doughnut, COLORS, palette } from "./charts.js";
+import { bar, doughnut, COLORS, palette, rupee } from "./charts.js";
 
 export function summaryCardsHtml(r) {
   const total = r.selected.length + r.not_selected.length;
@@ -10,36 +10,50 @@ export function summaryCardsHtml(r) {
     <div class="card stat"><div class="label">Total cost</div><div class="num">${inr(r.total_cost)}</div></div>
     <div class="card stat good"><div class="label">Remaining budget</div><div class="num">${inr(r.remaining_budget)}</div></div>
     <div class="card stat accent"><div class="label">Total value score</div><div class="num">${r.total_value}</div></div>
-    <div class="card stat"><div class="label">Products selected</div><div class="num">${r.selected.length} <span class="muted" style="font-size:1rem">/ ${total}</span></div></div>
+    <div class="card stat"><div class="label">Products selected</div><div class="num">${r.selected.length} <span class="muted" style="font-size:1rem;font-weight:500">/ ${total}</span></div></div>
     <div class="card stat"><div class="label">Budget utilization</div><div class="num">${r.utilization_pct}%</div>
       <div class="progress"><span style="width:${Math.min(r.utilization_pct, 100)}%"></span></div></div>
   </div>`;
 }
 
 export function chartsHtml(full) {
-  const box = (title, id, extra = "") => `<div class="card"><h3>${title}</h3><div class="chart-box" ${extra}><canvas id="${id}"></canvas></div></div>`;
+  // wide = the card stretches across the full row
+  const box = (title, id, hint = "", wide = false) => `<div class="card"${wide ? ' style="grid-column: 1 / -1"' : ""}><h3>${title}</h3><div class="chart-box"><canvas id="${id}"></canvas></div>${hint ? `<p class="legend-note">${hint}</p>` : ""}</div>`;
   return `
-  <div class="grid cols-2">
+  <div class="grid charts-grid">
     ${box("Budget utilization", "ch-util")}
     ${box("Category-wise spending", "ch-cat")}
-    ${box("Shopping strategies: total value", "ch-strat")}
+    ${box("Shopping strategies: total value", "ch-strat",
+      `<b style="color:${COLORS.PURPLE}">Purple</b> = dynamic programming (guaranteed best). <b style="color:#8d93a6">Grey</b> = simple baselines.`, !full)}
     ${full ? `<div class="card"><h3>Selected vs unselected products</h3><div class="chart-box" id="ch-sel-box"><canvas id="ch-sel"></canvas></div>
       <p class="legend-note"><b style="color:${COLORS.PURPLE}">Purple</b> = selected, <b style="color:#8d93a6">grey</b> = not selected (bars show priority score)</p></div>` : ""}
   </div>`;
 }
 
+const SHORT_NAMES = {
+  dp: "Dynamic Programming",
+  input_order: "Input order",
+  highest_value: "Highest priority",
+  best_ratio: "Best value per \u20B9",
+};
+
 export function drawCharts(r, full) {
-  doughnut("ch-util", ["Spent", "Remaining"], [r.total_cost, r.remaining_budget], [COLORS.PURPLE, COLORS.SOFT]);
+  doughnut("ch-util", ["Spent", "Remaining"], [r.total_cost, r.remaining_budget], [COLORS.PURPLE, COLORS.SOFT],
+    { center: r.utilization_pct + "%", sub: "of budget used" },
+    r.budget > 0 ? "" : "Budget is zero, so there is nothing to show.");
+
   const cats = Object.keys(r.category_spending);
-  bar("ch-cat", cats, cats.map((c) => r.category_spending[c]), palette(cats.length), { label: "Spent (\u20B9)" },
-    cats.length ? "" : "Nothing selected, so there is no category spending.");
-  const names = r.strategies.map((s) => s.name.replace(" (0/1 Knapsack)", ""));
-  bar("ch-strat", names, r.strategies.map((s) => s.total_value),
-    r.strategies.map((s) => (s.guaranteed_optimal ? COLORS.PURPLE : COLORS.GREY)), { label: "Total value" });
+  bar("ch-cat", cats, cats.map((c) => r.category_spending[c]), palette(cats.length),
+    { label: "Spent", format: rupee }, cats.length ? "" : "Nothing selected, so there is no category spending.");
+
+  bar("ch-strat", r.strategies.map((s) => SHORT_NAMES[s.key] || s.name), r.strategies.map((s) => s.total_value),
+    r.strategies.map((s) => (s.guaranteed_optimal ? COLORS.PURPLE : COLORS.GREY)),
+    { horizontal: true, label: "Total value" });
+
   if (full) {
     const all = [...r.selected.map((p) => ({ ...p, sel: true })), ...r.not_selected.map((p) => ({ ...p, sel: false }))];
     const box = document.getElementById("ch-sel-box");
-    if (box) box.style.height = Math.max(220, all.length * 28 + 40) + "px";
+    if (box) box.style.height = Math.max(380, all.length * 36 + 60) + "px";
     bar("ch-sel", all.map((p) => p.name), all.map((p) => p.value), all.map((p) => (p.sel ? COLORS.PURPLE : COLORS.GREY)),
       { horizontal: true, label: "Priority score" }, all.length ? "" : "No products.");
   }

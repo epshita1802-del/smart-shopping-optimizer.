@@ -3,14 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pick the best products for your budget using the 0/1 Knapsack dynamic programming algorithm.">
+  <meta name="theme-color" content="#6d4aff">
   <title>Smart Shopping Budget Optimizer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236d4aff'/%3E%3Cpath d='M20 24h24l-2 22H22z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M26 24a6 6 0 0 1 12 0' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <!-- Chart.js (charts need internet; everything else works offline) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#/"><span class="brand-mark">&#9733;</span> Smart Shopping Optimizer</a>
+    <a class="brand" href="#/" aria-label="Smart Shopping Optimizer home">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+      </span>
+      <span>Smart Shopping<small>Budget Optimizer</small></span>
+    </a>
     <button class="menu-btn" id="menu-btn" aria-label="Toggle menu">&#9776;</button>
     <nav id="nav">
       <a href="#/" data-route="home">Home</a>
@@ -22,7 +33,9 @@
       <a href="#/about" data-route="about">About</a>
     </nav>
   </header>
+  <noscript><p style="padding:2rem;text-align:center">Please enable JavaScript to use this app.</p></noscript>
   <main id="app"></main>
+  <footer class="footer"><b>Smart Shopping Budget Optimizer</b> &middot; Design and Analysis of Algorithms project &middot; 0/1 Knapsack with Dynamic Programming</footer>
   <div id="toasts" aria-live="polite"></div>
   <script type="module" src="js/main.js"></script>
 </body>
