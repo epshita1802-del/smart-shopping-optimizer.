@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Shopping Budget Optimizer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js (charts need internet; everything else works offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/"><span class="brand-mark">&#9733;</span> Smart Shopping Optimizer</a>
+    <button class="menu-btn" id="menu-btn" aria-label="Toggle menu">&#9776;</button>
+    <nav id="nav">
+      <a href="#/" data-route="home">Home</a>
+      <a href="#/dashboard" data-route="dashboard">Dashboard</a>
+      <a href="#/catalog" data-route="catalog">Products</a>
+      <a href="#/optimize" data-route="optimize">Optimize</a>
+      <a href="#/visualize" data-route="visualize">DP Visualizer</a>
+      <a href="#/history" data-route="history">History</a>
+      <a href="#/about" data-route="about">About</a>
+    </nav>
+  </header>
+  <main id="app"></main>
+  <div id="toasts" aria-live="polite"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
