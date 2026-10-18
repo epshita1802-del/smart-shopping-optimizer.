@@ -1,0 +1,29 @@
+# Python packages and caches
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Local database (created automatically when the app runs)
+*.db
+*.sqlite3
+
+# Secrets and local settings (.env.example stays tracked)
+.env
+backend/.env
+
+# Node packages, in case you ever add them
+node_modules/
+
+# Editor and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and zips
+*.log
+*.zip
